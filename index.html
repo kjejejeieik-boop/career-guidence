@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0f0c1d" />
+  <meta name="description" content="Find your perfect career in seconds with AI-powered guidance" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>Career Finder AI 🚀</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ═══════════════════════════════════════════
+       CSS VARIABLES & RESET
+    ═══════════════════════════════════════════ */
+    :root {
+      --bg:        #0f0c1d;
+      --bg2:       #16122a;
+      --surface:   rgba(255,255,255,0.06);
+      --border:    rgba(255,255,255,0.12);
+      --primary:   #7c3aed;
+      --primary2:  #a855f7;
+      --accent:    #00d4ff;
+      --accent2:   #0ea5e9;
+      --text:      #f1f0ff;
+      --muted:     #9ca3af;
+      --success:   #22c55e;
+      --warning:   #f59e0b;
+      --danger:    #ef4444;
+      --grad:      linear-gradient(135deg, #7c3aed, #00d4ff);
+      --grad2:     linear-gradient(135deg, #a855f7, #06b6d4);
+      --glow:      0 0 30px rgba(124,58,237,0.4);
+      --glow2:     0 0 30px rgba(0,212,255,0.3);
+      --radius:    20px;
+      --radius-sm: 12px;
+      --shadow:    0 8px 32px rgba(0,0,0,0.4);
+      --transition: 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+
+    .light-mode {
+      --bg:      #f0f4ff;
+      --bg2:     #e8eeff;
+      --surface: rgba(255,255,255,0.7);
+      --border:  rgba(124,58,237,0.2);
+      --text:    #1e1b4b;
+      --muted:   #6b7280;
+      --shadow:  0 8px 32px rgba(124,58,237,0.15);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow-x: hidden;
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-tap-highlight-color: transparent;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      position: relative;
+    }
+
+    /* Animated background mesh */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(124,58,237,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(0,212,255,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 50% 50%, rgba(168,85,247,0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .app-wrapper {
+      max-width: 430px;
+      margin: 0 auto;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ═══════════════════════════════════════════
+       SCREEN SYSTEM
+    ═══════════════════════════════════════════ */
+    .screen {
+      display: none;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 0;
+      animation: fadeUp 0.5s ease forwards;
+    }
+    .screen.active { display: flex; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(40px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes pulse {
+      0%,100% { transform: scale(1); }
+      50%      { transform: scale(1.05); }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes float {
+      0%,100% { transform: translateY(0px); }
+      50%      { transform: translateY(-10px); }
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: -200% center; }
+      100% { background-position:  200% center; }
+    }
+
+    @keyframes glow-pulse {
+      0%,100% { box-shadow: 0 0 20px rgba(124,58,237,0.4); }
+      50%      { box-shadow: 0 0 40px rgba(124,58,237,0.8), 0 0 80px rgba(0,212,255,0.3); }
+    }
+
+    /* ═══════════════════════════════════════════
+       1. SPLASH SCREEN
+    ═══════════════════════════════════════════ */
+    #splash {
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(ellipse at center, #1a0a3d 0%, #0f0c1d 70%);
+      gap: 24px;
+    }
+
+    .splash-logo {
+      font-size: 80px;
+      animation: float 2s ease-in-out infinite;
+      filter: drop-shadow(0 0 20px rgba(124,58,237,0.8));
+    }
+
+    .splash-title {
+      font-size: 26px;
+      font-weight: 800;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-align: center;
+      letter-spacing: -0.5px;
+    }
+
+    .splash-subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .splash-loader {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .splash-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--primary);
+      animation: bounce 1.2s ease infinite;
+    }
+    .splash-dot:nth-child(2) { animation-delay: 0.2s; background: var(--accent); }
+    .splash-dot:nth-child(3) { animation-delay: 0.4s; background: var(--primary2); }
+
+    @keyframes bounce {
+      0%,60%,100% { transform: translateY(0); opacity: 0.4; }
+      30%          { transform: translateY(-14px); opacity: 1; }
+    }
+
+    /* ═══════════════════════════════════════════
+       2. HOME SCREEN
+    ═══════════════════════════════════════════ */
+    #home {
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .home-header {
+      padding: 20px 24px 0;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .dark-toggle {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 8px 16px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text);
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .dark-toggle:hover { transform: scale(1.05); background: var(--primary); color: white; }
+
+    .home-hero {
+      padding: 40px 24px 0;
+      text-align: center;
+    }
+
+    .home-hero-emoji {
+      font-size: 72px;
+      animation: float 3s ease-in-out infinite;
+      display: block;
+      filter: drop-shadow(0 0 20px rgba(124,58,237,0.5));
+      margin-bottom: 24px;
+    }
+
+    .home-title {
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1.2;
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+    }
+
+    .home-title span {
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .home-subtitle {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    .stats-row {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 36px;
+      padding: 0 24px;
+    }
+
+    .stat-chip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 8px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      backdrop-filter: blur(10px);
+      white-space: nowrap;
+    }
+
+    .home-cta {
+      padding: 0 24px 40px;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 20px;
+      background: var(--grad);
+      border: none;
+      border-radius: var(--radius);
+      font-size: 18px;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      transition: var(--transition);
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+      font-family: 'Poppins', sans-serif;
+      animation: glow-pulse 2.5s ease infinite;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .btn-primary:hover::before, .btn-primary:active::before { opacity: 1; }
+    .btn-primary:active { transform: scale(0.97); }
+
+    .btn-secondary {
+      width: 100%;
+      padding: 16px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: 'Poppins', sans-serif;
+      backdrop-filter: blur(10px);
+      margin-top: 12px;
+    }
+    .btn-secondary:hover { border-color: var(--primary); color: var(--primary); transform: scale(1.01); }
+    .btn-secondary:active { transform: scale(0.97); }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 0 24px 20px;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      backdrop-filter: blur(10px);
+      transition: transform 0.2s ease;
+    }
+    .feature-card:hover { transform: scale(1.02); }
+
+    .feature-emoji { font-size: 28px; margin-bottom: 8px; display: block; }
+    .feature-label { font-size: 13px; font-weight: 600; color: var(--text); }
+    .feature-desc  { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    /* ═══════════════════════════════════════════
+       3. INPUT SCREEN
+    ═══════════════════════════════════════════ */
+    #input-screen {
+      padding: 0;
+    }
+
+    .screen-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 20px 24px;
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      backdrop-filter: blur(20px);
+      z-index: 10;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .back-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 42px; height: 42px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+    .back-btn:hover { background: var(--primary); }
+
+    .screen-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .screen-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      padding-bottom: 40px;
+    }
+
+    /* Progress Bar */
+    .progress-wrap {
+      padding: 0 24px;
+    }
+    .progress-bar-bg {
+      background: var(--surface);
+      border-radius: 50px;
+      height: 6px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--grad);
+      border-radius: 50px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+    .progress-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 6px;
+      text-align: right;
+    }
+
+    /* Form Groups */
+    .form-group { display: flex; flex-direction: column; gap: 10px; }
+
+    .form-label {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .form-label span { font-size: 18px; }
+
+    .form-input {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px 18px;
+      font-size: 15px;
+      color: var(--text);
+      font-family: 'Poppins', sans-serif;
+      transition: border-color 0.3s ease;
+      backdrop-filter: blur(10px);
+      width: 100%;
+      outline: none;
+    }
+    .form-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(124,58,237,0.2); }
+    .form-input::placeholder { color: var(--muted); }
+
+    /* Marks Slider */
+    .slider-wrap { position: relative; padding: 10px 0; }
+
+    .marks-display {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .marks-value {
+      font-size: 36px;
+      font-weight: 900;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .marks-grade {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 50px;
+      background: var(--surface);
+      outline: none;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: var(--grad);
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(124,58,237,0.5);
+      transition: transform 0.2s ease;
+    }
+    input[type="range"]::-webkit-slider-thumb:active { transform: scale(1.2); }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* Interest Buttons */
+    .interest-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .interest-btn {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px 12px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Poppins', sans-serif;
+      backdrop-filter: blur(10px);
+    }
+    .interest-btn .i-emoji { font-size: 28px; }
+    .interest-btn .i-label { font-size: 13px; font-weight: 600; color: var(--text); }
+    .interest-btn:hover, .interest-btn.selected {
+      border-color: var(--primary);
+      background: rgba(124,58,237,0.2);
+      transform: scale(1.03);
+      box-shadow: 0 0 20px rgba(124,58,237,0.25);
+    }
+    .interest-btn.selected .i-label { color: var(--primary2); }
+
+    /* Budget Buttons */
+    .budget-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .budget-btn {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 8px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+    .budget-btn .b-emoji { font-size: 24px; display: block; margin-bottom: 4px; }
+    .budget-btn .b-label { font-size: 13px; font-weight: 700; color: var(--text); display: block; }
+    .budget-btn .b-desc  { font-size: 10px; color: var(--muted); display: block; margin-top: 2px; }
+    .budget-btn:hover, .budget-btn.selected {
+      border-color: var(--accent);
+      background: rgba(0,212,255,0.15);
+      transform: scale(1.03);
+    }
+    .budget-btn.selected .b-label { color: var(--accent); }
+
+
+
+    /* ═══════════════════════════════════════════
+       4. LOADING SCREEN
+    ═══════════════════════════════════════════ */
+    #loading-screen {
+      justify-content: center;
+      align-items: center;
+      gap: 28px;
+      text-align: center;
+      padding: 40px 24px;
+    }
+
+    .loading-emoji {
+      font-size: 64px;
+      animation: float 1.5s ease-in-out infinite;
+    }
+
+    .loading-spinner {
+      width: 64px; height: 64px;
+      border: 3px solid var(--surface);
+      border-top-color: var(--primary);
+      border-right-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .loading-text {
+      font-size: 20px;
+      font-weight: 700;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .loading-facts {
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 280px;
+      line-height: 1.6;
+    }
+
+    .loading-bar-wrap {
+      width: 200px;
+      background: var(--surface);
+      border-radius: 50px;
+      height: 4px;
+      overflow: hidden;
+    }
+    .loading-bar-fill {
+      height: 100%;
+      background: var(--grad);
+      border-radius: 50px;
+      animation: loadBar 1.5s ease forwards;
+    }
+    @keyframes loadBar {
+      from { width: 0%; }
+      to   { width: 95%; }
+    }
+
+    /* ═══════════════════════════════════════════
+       5. RESULT SCREEN
+    ═══════════════════════════════════════════ */
+    #result-screen {
+      padding: 0;
+    }
+
+    .result-header {
+      padding: 20px 24px;
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      backdrop-filter: blur(20px);
+      z-index: 10;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .result-body {
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding-bottom: 40px;
+    }
+
+    .result-greeting {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+    .result-greeting-emoji { font-size: 40px; display: block; margin-bottom: 8px; }
+    .result-greeting-text {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.4;
+    }
+    .result-greeting-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+    .result-mode-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--grad);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 50px;
+      margin-top: 10px;
+    }
+
+    /* Career Cards */
+    .career-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      backdrop-filter: blur(10px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: slideIn 0.5s ease both;
+      position: relative;
+      overflow: hidden;
+    }
+    .career-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--grad);
+      border-radius: 4px 0 0 4px;
+    }
+    .career-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+    .career-card:nth-child(2) { animation-delay: 0.1s; }
+    .career-card:nth-child(3) { animation-delay: 0.2s; }
+    .career-card:nth-child(4) { animation-delay: 0.3s; }
+    .career-card:nth-child(5) { animation-delay: 0.4s; }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .card-emoji-wrap {
+      width: 52px; height: 52px;
+      background: rgba(124,58,237,0.15);
+      border: 1px solid rgba(124,58,237,0.3);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+    .card-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .tag-diff-easy   { background: rgba(34,197,94,0.15);  color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
+    .tag-diff-medium { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+    .tag-diff-hard   { background: rgba(239,68,68,0.15);  color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+    .tag-cost        { background: rgba(0,212,255,0.1);   color: var(--accent); border: 1px solid rgba(0,212,255,0.2); }
+    .tag-scope-high  { background: rgba(124,58,237,0.15); color: var(--primary2); border: 1px solid rgba(124,58,237,0.3); }
+    .tag-scope-medium{ background: rgba(156,163,175,0.1); color: var(--muted); border: 1px solid rgba(156,163,175,0.2); }
+
+    /* Share / Viral Section */
+    .viral-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      backdrop-filter: blur(10px);
+      text-align: center;
+    }
+    .viral-tagline {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .viral-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    .viral-emoji-row { font-size: 28px; margin-bottom: 12px; letter-spacing: 4px; }
+
+    .btn-share {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .btn-whatsapp {
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      color: white;
+    }
+    .btn-copy {
+      background: var(--grad);
+      color: white;
+    }
+    .btn-restart {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      color: var(--text);
+    }
+    .btn-share:active { transform: scale(0.97); }
+
+    /* Rating Section */
+    .rating-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      backdrop-filter: blur(10px);
+      text-align: center;
+    }
+    .rating-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; }
+    .stars-row { display: flex; gap: 8px; justify-content: center; margin-bottom: 12px; }
+    .star-btn {
+      font-size: 32px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      filter: grayscale(1);
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .star-btn.lit { filter: grayscale(0); transform: scale(1.2); }
+    .star-btn:hover { transform: scale(1.3); filter: grayscale(0); }
+    .rating-thanks {
+      font-size: 13px;
+      color: var(--success);
+      font-weight: 600;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    /* Offline Banner */
+    .offline-banner {
+      display: none;
+      background: rgba(245,158,11,0.15);
+      border: 1px solid rgba(245,158,11,0.3);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #f59e0b;
+      text-align: center;
+      margin: 0 24px;
+    }
+    .offline-banner.show { display: block; }
+
+    /* ═══════════════════════════════════════════
+       CONFETTI
+    ═══════════════════════════════════════════ */
+    .confetti-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      overflow: hidden;
+    }
+    .confetti-piece {
+      position: absolute;
+      width: 10px; height: 10px;
+      top: -20px;
+      animation: confettiFall linear both;
+      border-radius: 2px;
+    }
+    @keyframes confettiFall {
+      to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* ═══════════════════════════════════════════
+       TOAST
+    ═══════════════════════════════════════════ */
+    .toast {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 14px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      backdrop-filter: blur(20px);
+      z-index: 9998;
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+      white-space: nowrap;
+      box-shadow: var(--shadow);
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ═══════════════════════════════════════════
+       INSTALL BANNER
+    ═══════════════════════════════════════════ */
+    .install-banner {
+      display: none;
+      margin: 0 24px 16px;
+      background: rgba(0,212,255,0.1);
+      border: 1px solid rgba(0,212,255,0.3);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      align-items: center;
+      gap: 12px;
+    }
+    .install-banner.show { display: flex; }
+    .install-banner-text { flex: 1; font-size: 13px; font-weight: 600; color: var(--accent); }
+    .install-btn {
+      background: var(--accent);
+      color: #0f0c1d;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      white-space: nowrap;
+    }
+
+    /* ═══════════════════════════════════════════
+       SCROLLBAR
+    ═══════════════════════════════════════════ */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+
+    /* ═══════════════════════════════════════════
+       UTILITIES
+    ═══════════════════════════════════════════ */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 4px 0;
+    }
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 2px;
+    }
+    .text-gradient {
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app-wrapper">
+
+    <!-- ───────────────────────────────────────
+         SPLASH SCREEN
+    ─────────────────────────────────────────── -->
+    <div class="screen active" id="splash">
+      <div class="splash-logo">🚀</div>
+      <div class="splash-title">Career Finder AI</div>
+      <div class="splash-subtitle">Powered by Smart Intelligence</div>
+      <div class="splash-loader">
+        <div class="splash-dot"></div>
+        <div class="splash-dot"></div>
+        <div class="splash-dot"></div>
+      </div>
+    </div>
+
+    <!-- ───────────────────────────────────────
+         HOME SCREEN
+    ─────────────────────────────────────────── -->
+    <div class="screen" id="home">
+      <div class="home-header">
+        <button class="dark-toggle" onclick="toggleDark()" id="darkToggleBtn">☀️ Light</button>
+      </div>
+
+      <div class="install-banner" id="installBanner">
+        <div class="install-banner-text">📲 Add to Home Screen for best experience!</div>
+        <button class="install-btn" onclick="installApp()">Install</button>
+      </div>
+
+      <div class="offline-banner" id="homeBanner">📴 You're offline — basic mode available</div>
+
+      <div class="home-hero">
+        <span class="home-hero-emoji">🎯</span>
+        <h1 class="home-title">Find Your Perfect<br/><span>Career in Seconds</span> 🚀</h1>
+        <p class="home-subtitle">No confusion. Just clear direction.<br/>Answer 4 quick questions & get your roadmap.</p>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-chip">⚡ 10 Sec Quiz</div>
+        <div class="stat-chip">🎯 AI-Powered</div>
+        <div class="stat-chip">💡 Free Forever</div>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <span class="feature-emoji">🤖</span>
+          <div class="feature-label">AI Analysis</div>
+          <div class="feature-desc">Personalized for you</div>
+        </div>
+        <div class="feature-card">
+          <span class="feature-emoji">📊</span>
+          <div class="feature-label">Career Scope</div>
+          <div class="feature-desc">Future projections</div>
+        </div>
+        <div class="feature-card">
+          <span class="feature-emoji">💰</span>
+          <div class="feature-label">Cost Guide</div>
+          <div class="feature-desc">Budget-friendly picks</div>
+        </div>
+        <div class="feature-card">
+          <span class="feature-emoji">🌐</span>
+          <div class="feature-label">Works Offline</div>
+          <div class="feature-desc">No internet needed</div>
+        </div>
+      </div>
+
+      <div class="home-cta">
+        <button class="btn-primary" onclick="goToInput()">🚀 Start Finding My Career</button>
+        <button class="btn-secondary" onclick="goToInput()" style="font-size:13px;color:var(--muted);">Takes less than 30 seconds ✨</button>
+      </div>
+    </div>
+
+    <!-- ───────────────────────────────────────
+         INPUT SCREEN
+    ─────────────────────────────────────────── -->
+    <div class="screen" id="input-screen">
+      <div class="screen-header">
+        <div class="back-btn" onclick="goBack('home')">←</div>
+        <div class="screen-title">Tell Us About You 👤</div>
+      </div>
+
+      <div class="progress-wrap" style="padding:16px 24px 0;">
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+        <div class="progress-label" id="progressLabel">0% complete</div>
+      </div>
+
+      <div class="screen-body">
+
+        <!-- Name -->
+        <div class="form-group">
+          <label class="form-label"><span>👋</span> What's your name? <small style="color:var(--muted);font-size:11px;font-weight:400">(optional)</small></label>
+          <input class="form-input" type="text" id="nameInput" placeholder="e.g. Rahul, Priya, Arjun..."
+            oninput="updateProgress()" autocomplete="given-name" />
+        </div>
+
+        <!-- Marks -->
+        <div class="form-group">
+          <label class="form-label"><span>📝</span> Your marks / percentage</label>
+          <div class="marks-display">
+            <div class="marks-value" id="marksValue">75%</div>
+            <div class="marks-grade" id="marksGrade">Good 👍</div>
+          </div>
+          <div class="slider-wrap">
+            <input type="range" id="marksSlider" min="0" max="100" value="75"
+              oninput="updateMarks(this.value); updateProgress()" />
+            <div class="slider-labels"><span>0%</span><span>50%</span><span>100%</span></div>
+          </div>
+        </div>
+
+        <!-- Interest -->
+        <div class="form-group">
+          <label class="form-label"><span>❤️</span> What do you love?</label>
+          <div class="interest-grid" id="interestGrid">
+            <button class="interest-btn" data-value="technology" onclick="selectInterest(this)">
+              <span class="i-emoji">💻</span>
+              <span class="i-label">Technology</span>
+            </button>
+            <button class="interest-btn" data-value="science" onclick="selectInterest(this)">
+              <span class="i-emoji">🔬</span>
+              <span class="i-label">Science</span>
+            </button>
+            <button class="interest-btn" data-value="arts" onclick="selectInterest(this)">
+              <span class="i-emoji">🎨</span>
+              <span class="i-label">Arts & Design</span>
+            </button>
+            <button class="interest-btn" data-value="commerce" onclick="selectInterest(this)">
+              <span class="i-emoji">📈</span>
+              <span class="i-label">Commerce</span>
+            </button>
+            <button class="interest-btn" data-value="medical" onclick="selectInterest(this)">
+              <span class="i-emoji">⚕️</span>
+              <span class="i-label">Medical</span>
+            </button>
+            <button class="interest-btn" data-value="sports" onclick="selectInterest(this)">
+              <span class="i-emoji">⚽</span>
+              <span class="i-label">Sports</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Budget -->
+        <div class="form-group">
+          <label class="form-label"><span>💰</span> Study budget?</label>
+          <div class="budget-row">
+            <button class="budget-btn" data-value="low" onclick="selectBudget(this)">
+              <span class="b-emoji">🪙</span>
+              <span class="b-label">Low</span>
+              <span class="b-desc">Under ₹3L</span>
+            </button>
+            <button class="budget-btn" data-value="medium" onclick="selectBudget(this)">
+              <span class="b-emoji">💵</span>
+              <span class="b-label">Medium</span>
+              <span class="b-desc">₹3L–₹10L</span>
+            </button>
+            <button class="budget-btn" data-value="high" onclick="selectBudget(this)">
+              <span class="b-emoji">💎</span>
+              <span class="b-label">High</span>
+              <span class="b-desc">₹10L+</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button class="btn-primary" id="findBtn" onclick="findCareers()" disabled
+          style="opacity:0.5;cursor:not-allowed;">
+          🔍 Find My Careers
+        </button>
+      </div>
+    </div>
+
+    <!-- ───────────────────────────────────────
+         LOADING SCREEN
+    ─────────────────────────────────────────── -->
+    <div class="screen" id="loading-screen">
+      <div class="loading-emoji">🔭</div>
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Analyzing your profile…</div>
+      <div class="loading-bar-wrap"><div class="loading-bar-fill"></div></div>
+      <div class="loading-facts" id="loadingFact">
+        "Every expert was once a beginner. You're already on the right path! 💫"
+      </div>
+    </div>
+
+    <!-- ───────────────────────────────────────
+         RESULT SCREEN
+    ─────────────────────────────────────────── -->
+    <div class="screen" id="result-screen">
+      <div class="result-header">
+        <div class="back-btn" onclick="goBack('input-screen')">←</div>
+        <div class="screen-title">Your Career Roadmap 🗺️</div>
+      </div>
+
+      <div class="result-body" id="resultBody">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+
+  </div><!-- /app-wrapper -->
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Confetti Canvas -->
+  <div class="confetti-container" id="confettiContainer"></div>
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       JAVASCRIPT
+  ═══════════════════════════════════════════════════════════ -->
+  <script>
+    // ─────────────────────────────────────────────
+    // STATE
+    // ─────────────────────────────────────────────
+    let state = {
+      name: '',
+      marks: 75,
+      interest: '',
+      budget: '',
+      isDark: true,
+      results: []
+    };
+
+    let deferredPrompt = null; // PWA install
+
+
+    // ─────────────────────────────────────────────
+    // CAREER DATABASE (FREE MODE)
+    // ─────────────────────────────────────────────
+    const careerDB = {
+      technology: {
+        high: [
+          { name: "Software Engineer",    emoji: "💻", desc: "Build apps, websites and complex software systems used by millions.",         difficulty: "Medium", cost: "₹₹₹",    scope: "High" },
+          { name: "Data Scientist",       emoji: "📊", desc: "Uncover valuable insights from big data using statistics and ML.",            difficulty: "Hard",   cost: "₹₹₹₹",   scope: "High" },
+          { name: "AI / ML Engineer",     emoji: "🤖", desc: "Create intelligent systems that learn and make smart decisions.",             difficulty: "Hard",   cost: "₹₹₹₹",   scope: "High" },
+          { name: "Cybersecurity Expert", emoji: "🔐", desc: "Protect organisations from hackers, breaches, and cyber threats.",           difficulty: "Hard",   cost: "₹₹₹",    scope: "High" },
+        ],
+        medium: [
+          { name: "Web Developer",        emoji: "🌐", desc: "Design and build beautiful, functional websites and web apps.",              difficulty: "Medium", cost: "₹₹",     scope: "High" },
+          { name: "Mobile App Developer", emoji: "📱", desc: "Build iOS and Android apps that people use every day.",                      difficulty: "Medium", cost: "₹₹₹",    scope: "High" },
+          { name: "Game Developer",       emoji: "🎮", desc: "Design and code video games across platforms.",                              difficulty: "Medium", cost: "₹₹₹",    scope: "Medium" },
+          { name: "Cloud Engineer",       emoji: "☁️",  desc: "Manage cloud infrastructure on AWS, Azure or Google Cloud.",                difficulty: "Medium", cost: "₹₹₹",    scope: "High" },
+        ],
+        low: [
+          { name: "Freelance Web Developer", emoji: "🌐", desc: "Build client websites independently from home.", difficulty: "Easy", cost: "₹",  scope: "High" },
+          { name: "IT Technician",           emoji: "🖥️", desc: "Repair, maintain computers, printers and networks.",  difficulty: "Easy", cost: "₹",  scope: "Medium" },
+          { name: "Tech Content Creator",    emoji: "📹", desc: "Teach coding and tech online — YouTube, blogs, reels.", difficulty: "Easy", cost: "₹",  scope: "High" },
+        ]
+      },
+      science: {
+        high: [
+          { name: "Research Scientist",   emoji: "🔬", desc: "Push the boundaries of human knowledge through experiments.", difficulty: "Hard",   cost: "₹₹₹₹",   scope: "High" },
+          { name: "Aerospace Engineer",   emoji: "🚀", desc: "Design aircraft, rockets and spacecraft.",                    difficulty: "Hard",   cost: "₹₹₹₹",   scope: "High" },
+          { name: "Biotechnologist",      emoji: "🧬", desc: "Develop life-saving medicines and technologies.",             difficulty: "Hard",   cost: "₹₹₹₹",   scope: "High" },
+          { name: "Nuclear Engineer",     emoji: "⚛️",  desc: "Harness nuclear energy for power and medicine.",             difficulty: "Hard",   cost: "₹₹₹₹",   scope: "Medium" },
+        ],
+        medium: [
+          { name: "Civil Engineer",           emoji: "🏗️", desc: "Design bridges, buildings and infrastructure.",         difficulty: "Medium", cost: "₹₹₹",    scope: "High" },
+          { name: "Mechanical Engineer",      emoji: "⚙️",  desc: "Design and build machines and mechanical systems.",    difficulty: "Medium", cost: "₹₹₹",    scope: "High" },
+          { name: "Environmental Scientist",  emoji: "🌿", desc: "Study and protect the environment and ecology.",         difficulty: "Medium", cost: "₹₹₹",    scope: "High" },
+        ],
+        low: [
+          { name: "Lab Technician",  emoji: "🧪", desc: "Run diagnostic tests and assist in research labs.", difficulty: "Easy", cost: "₹₹", scope: "Medium" },
+          { name: "Science Teacher", emoji: "👨‍🏫", desc: "Inspire the next generation of scientists.",       difficulty: "Easy", cost: "₹₹", scope: "Medium" },
+        ]
+      },
+      arts: {
+        high: [
+          { name: "UX / UI Designer",      emoji: "✏️",  desc: "Create beautiful, intuitive interfaces for apps and websites.",          difficulty: "Medium", cost: "₹₹₹",  scope: "High" },
+          { name: "Film Director",          emoji: "🎬", desc: "Tell powerful stories through cinema and visual media.",                  difficulty: "Hard",   cost: "₹₹₹₹", scope: "High" },
+          { name: "Animation Artist",       emoji: "🎭", desc: "Bring characters and worlds to life through 2D / 3D animation.",         difficulty: "Hard",   cost: "₹₹₹",  scope: "High" },
+          { name: "Brand & Graphic Designer", emoji: "🎨", desc: "Build visual identities for companies and products.",                  difficulty: "Medium", cost: "₹₹₹",  scope: "High" },
+        ],
+        medium: [
+          { name: "Fashion Designer",  emoji: "👗", desc: "Design clothing, accessories and runway collections.",  difficulty: "Medium", cost: "₹₹₹", scope: "Medium" },
+          { name: "Photographer",      emoji: "📸", desc: "Capture moments for brands, events and media.",          difficulty: "Easy",   cost: "₹₹",  scope: "Medium" },
+          { name: "Content Creator",   emoji: "🎥", desc: "Build an audience on YouTube, Instagram or Reels.",      difficulty: "Easy",   cost: "₹",   scope: "High" },
+        ],
+        low: [
+          { name: "Freelance Artist",  emoji: "🖌️", desc: "Create and sell illustrations, logos or portraits.",  difficulty: "Easy", cost: "₹",  scope: "Medium" },
+          { name: "Art Teacher",       emoji: "🎓", desc: "Teach creative skills in schools or online.",           difficulty: "Easy", cost: "₹₹", scope: "Medium" },
+        ]
+      },
+      commerce: {
+        high: [
+          { name: "Chartered Accountant (CA)", emoji: "📈", desc: "Manage finances, audits, and taxes for top companies.",  difficulty: "Hard",   cost: "₹₹₹",    scope: "High" },
+          { name: "Investment Banker",          emoji: "💹", desc: "Handle mergers, acquisitions and high-value financial deals.", difficulty: "Hard",   cost: "₹₹₹₹₹", scope: "High" },
+          { name: "MBA – Management",           emoji: "💼", desc: "Lead businesses, teams and strategy at the highest level.",  difficulty: "Hard",   cost: "₹₹₹₹₹", scope: "High" },
+        ],
+        medium: [
+          { name: "Digital Marketer",  emoji: "📣", desc: "Grow brands online using SEO, ads, and social media.",    difficulty: "Medium", cost: "₹₹",  scope: "High" },
+          { name: "Business Analyst",  emoji: "📊", desc: "Use data to improve how businesses make decisions.",       difficulty: "Medium", cost: "₹₹₹", scope: "High" },
+          { name: "Entrepreneur",      emoji: "🚀", desc: "Build your own startup and solve real-world problems.",    difficulty: "Hard",   cost: "₹₹",  scope: "High" },
+        ],
+        low: [
+          { name: "Sales Manager",    emoji: "🤝", desc: "Lead sales teams and hit business targets.",                difficulty: "Easy", cost: "₹₹", scope: "High" },
+          { name: "E-Commerce Seller",emoji: "🛒", desc: "Sell products on Amazon, Flipkart or Meesho.",             difficulty: "Easy", cost: "₹",  scope: "High" },
+        ]
+      },
+      medical: {
+        high: [
+          { name: "Doctor (MBBS)",    emoji: "⚕️",  desc: "Diagnose and treat patients — one of the most respected careers.", difficulty: "Hard",   cost: "₹₹₹₹₹", scope: "High" },
+          { name: "Surgeon",          emoji: "🏥", desc: "Perform life-saving operations and specialised procedures.",       difficulty: "Hard",   cost: "₹₹₹₹₹", scope: "High" },
+          { name: "Dentist",          emoji: "🦷", desc: "Treat oral and dental conditions with precision.",                 difficulty: "Hard",   cost: "₹₹₹₹",  scope: "High" },
+        ],
+        medium: [
+          { name: "Pharmacist",       emoji: "💊", desc: "Prepare and dispense life-saving medicines.",         difficulty: "Medium", cost: "₹₹₹", scope: "High" },
+          { name: "Physiotherapist",  emoji: "🦴", desc: "Help patients recover from injuries through therapy.", difficulty: "Medium", cost: "₹₹₹", scope: "High" },
+          { name: "Nurse",            emoji: "🩺", desc: "Provide care and support to patients day and night.",  difficulty: "Medium", cost: "₹₹",  scope: "High" },
+        ],
+        low: [
+          { name: "Medical Lab Technician", emoji: "🧫", desc: "Run diagnostic tests and analyse clinical samples.", difficulty: "Easy", cost: "₹₹", scope: "Medium" },
+          { name: "Health Educator",        emoji: "📋", desc: "Educate communities on health, hygiene and wellness.",difficulty: "Easy", cost: "₹₹", scope: "Medium" },
+        ]
+      },
+      sports: {
+        high: [
+          { name: "Professional Athlete",    emoji: "🏆", desc: "Compete at the national / international level in your sport.", difficulty: "Hard",   cost: "₹₹₹",    scope: "High" },
+          { name: "Sports Psychologist",     emoji: "🧠", desc: "Help athletes achieve peak mental performance.",               difficulty: "Hard",   cost: "₹₹₹₹",   scope: "High" },
+          { name: "Sports Physiotherapist",  emoji: "💪", desc: "Prevent and treat sports injuries for athletes.",              difficulty: "Hard",   cost: "₹₹₹₹",   scope: "High" },
+        ],
+        medium: [
+          { name: "Sports Coach",    emoji: "⚽", desc: "Train and guide athletes to reach their full potential.",   difficulty: "Medium", cost: "₹₹",  scope: "High" },
+          { name: "Fitness Trainer", emoji: "🏋️", desc: "Help people achieve health and fitness goals.",             difficulty: "Easy",   cost: "₹₹",  scope: "High" },
+          { name: "Sports Journalist", emoji: "📝", desc: "Cover sports events, write match reports and interview athletes.", difficulty: "Medium", cost: "₹₹", scope: "Medium" },
+        ],
+        low: [
+          { name: "PE Teacher",            emoji: "🏃", desc: "Teach physical education and sports in schools.",        difficulty: "Easy", cost: "₹₹", scope: "Medium" },
+          { name: "Sports Blogger / Vlogger", emoji: "📺", desc: "Create sports content for YouTube or Instagram.",    difficulty: "Easy", cost: "₹",  scope: "High" },
+        ]
+      }
+    };
+
+    const loadingFacts = [
+      '"Every expert was once a beginner. You\'re already on the right path! 💫"',
+      '"The best career is the one that excites you every single morning ☀️"',
+      '"India needs 700K+ software engineers by 2030. Skills > Degrees 💡"',
+      '"70% of today\'s top jobs didn\'t exist 20 years ago. Future is bright! 🌟"',
+      '"Success is not about your marks — it\'s about your mindset 🔥"',
+      '"The right career choice changes everything. You\'re making the right move 🎯"'
+    ];
+
+
+    // ─────────────────────────────────────────────
+    // SCREEN NAVIGATION
+    // ─────────────────────────────────────────────
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById(id);
+      if (target) {
+        target.classList.add('active');
+        window.scrollTo(0, 0);
+      }
+    }
+
+    function goBack(screenId) {
+      showScreen(screenId);
+    }
+
+    function goToInput() {
+      showScreen('input-screen');
+      updateProgress();
+    }
+
+    // Android hardware back button
+    window.addEventListener('popstate', () => {
+      const active = document.querySelector('.screen.active');
+      if (active && active.id !== 'home') goBack('home');
+    });
+    history.pushState(null, '', '');
+
+
+    // ─────────────────────────────────────────────
+    // MARKS SLIDER
+    // ─────────────────────────────────────────────
+    function updateMarks(val) {
+      state.marks = parseInt(val);
+      document.getElementById('marksValue').textContent = val + '%';
+      const gradeMap = [
+        [90, '🌟 Excellent!'],
+        [80, '🔥 Very Good'],
+        [70, '👍 Good'],
+        [60, '😊 Average'],
+        [50, '📖 Keep Going'],
+        [0,  '💪 You Can Do It']
+      ];
+      const grade = gradeMap.find(([min]) => val >= min);
+      document.getElementById('marksGrade').textContent = grade ? grade[1] : '💪 You Can Do It';
+
+      // Update slider track fill
+      const slider = document.getElementById('marksSlider');
+      const pct = (val - slider.min) / (slider.max - slider.min) * 100;
+      slider.style.background = `linear-gradient(to right, #7c3aed ${pct}%, rgba(255,255,255,0.08) ${pct}%)`;
+    }
+
+    // Init slider
+    updateMarks(75);
+
+
+    // ─────────────────────────────────────────────
+    // INTEREST SELECTION
+    // ─────────────────────────────────────────────
+    function selectInterest(btn) {
+      document.querySelectorAll('.interest-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      state.interest = btn.dataset.value;
+      updateProgress();
+      checkFormReady();
+    }
+
+
+    // ─────────────────────────────────────────────
+    // BUDGET SELECTION
+    // ─────────────────────────────────────────────
+    function selectBudget(btn) {
+      document.querySelectorAll('.budget-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      state.budget = btn.dataset.value;
+      updateProgress();
+      checkFormReady();
+    }
+
+
+    // ─────────────────────────────────────────────
+    // PROGRESS BAR
+    // ─────────────────────────────────────────────
+    function updateProgress() {
+      state.name   = document.getElementById('nameInput').value.trim();
+      state.marks  = parseInt(document.getElementById('marksSlider').value);
+
+      let filled = 0;
+      if (state.name)     filled += 20;  // name optional but counts
+      filled += 30;                       // marks always has a value
+      if (state.interest) filled += 25;
+      if (state.budget)   filled += 25;
+
+      const pct = Math.min(filled, 100);
+      document.getElementById('progressFill').style.width = pct + '%';
+      document.getElementById('progressLabel').textContent = pct + '% complete';
+      checkFormReady();
+    }
+
+    function checkFormReady() {
+      const ready = state.interest && state.budget;
+      const btn = document.getElementById('findBtn');
+      btn.disabled = !ready;
+      btn.style.opacity = ready ? '1' : '0.5';
+      btn.style.cursor  = ready ? 'pointer' : 'not-allowed';
+    }
+
+
+    // ─────────────────────────────────────────────
+    // ─────────────────────────────────────────────
+    // CAREER LOGIC — FREE MODE
+    // ─────────────────────────────────────────────
+    function getFreeCareers() {
+      const marks    = state.marks;
+      const interest = state.interest;
+      const budget   = state.budget;
+
+      // Determine marks tier
+      let tier;
+      if (marks >= 75)      tier = 'high';
+      else if (marks >= 50) tier = 'medium';
+      else                  tier = 'low';
+
+      const db = careerDB[interest] || careerDB['technology'];
+
+      // Get primary tier + fallback
+      let careers = [...(db[tier] || [])];
+      if (careers.length < 3 && tier === 'high')   careers = [...careers, ...(db['medium'] || [])];
+      if (careers.length < 3 && tier === 'low')    careers = [...(db['medium'] || []), ...careers];
+
+      // Filter/sort by budget
+      if (budget === 'low') {
+        careers.sort((a, b) => a.cost.length - b.cost.length);
+      } else if (budget === 'high') {
+        careers.sort((a, b) => b.cost.length - a.cost.length);
+      }
+
+      return careers.slice(0, 5);
+    }
+
+
+    // ─────────────────────────────────────────────
+    // MAIN FIND CAREERS FUNCTION
+    // ─────────────────────────────────────────────
+    async function findCareers() {
+      state.name    = document.getElementById('nameInput').value.trim();
+      state.marks   = parseInt(document.getElementById('marksSlider').value);
+
+      if (!state.interest || !state.budget) {
+        showToast('⚠️ Please select interest and budget first!');
+        return;
+      }
+
+      showScreen('loading-screen');
+      rotateFact();
+
+      // Brief loading delay for UX feel
+      await new Promise(r => setTimeout(r, 1800));
+      state.results = getFreeCareers();
+      showResults();
+    }
+
+
+    // ─────────────────────────────────────────────
+    // SHOW RESULTS
+    // ─────────────────────────────────────────────
+    function showResults() {
+      const name    = state.name || 'Champion';
+      const results = state.results;
+      const body    = document.getElementById('resultBody');
+
+      const greetings = [
+        `Hey ${name}, here are your best career options! 👇`,
+        `${name}, your future looks bright! Check these out 🌟`,
+        `Great news, ${name}! We found your perfect paths 🎯`
+      ];
+      const greeting = greetings[Math.floor(Math.random() * greetings.length)];
+
+      let html = `
+        <div class="result-greeting">
+          <span class="result-greeting-emoji">🎉</span>
+          <div class="result-greeting-text">${greeting}</div>
+          <div class="result-greeting-sub">Based on your ${state.marks}% marks in ${state.interest} with ${state.budget} budget</div>
+          <div class="result-mode-badge">⚡ Smart Mode</div>
+        </div>
+      `;
+
+      // Career Cards
+      results.forEach((career, i) => {
+        const diffClass = career.difficulty === 'Easy' ? 'tag-diff-easy'
+                        : career.difficulty === 'Hard' ? 'tag-diff-hard'
+                        : 'tag-diff-medium';
+        const scopeClass = career.scope === 'High' ? 'tag-scope-high' : 'tag-scope-medium';
+
+        html += `
+          <div class="career-card" style="animation-delay:${i * 0.1}s">
+            <div class="card-top">
+              <div class="card-emoji-wrap">${career.emoji}</div>
+              <div>
+                <div class="card-title">${career.name}</div>
+                <div class="card-desc">${career.desc}</div>
+              </div>
+            </div>
+            <div class="card-tags">
+              <span class="tag ${diffClass}">⚡ ${career.difficulty}</span>
+              <span class="tag tag-cost">💰 ${career.cost}</span>
+              <span class="tag ${scopeClass}">📈 ${career.scope} Scope</span>
+            </div>
+          </div>
+        `;
+      });
+
+      // Viral / Share Section
+      const shareText = buildShareText();
+      html += `
+        <div class="viral-section">
+          <div class="viral-emoji-row">😄 🔥 💯</div>
+          <div class="viral-tagline">Tension mat le bro, life set ho jayegi! 😄🔥</div>
+          <div class="viral-sub">Share your results and inspire your friends too!</div>
+          <button class="btn-share btn-whatsapp" onclick="shareWhatsApp()">
+            💬 Send to Friend on WhatsApp
+          </button>
+          <button class="btn-share btn-copy" onclick="copyResults()">
+            📋 Copy My Results
+          </button>
+          <button class="btn-share btn-restart" onclick="showScreen('input-screen')">
+            🔄 Try Again
+          </button>
+        </div>
+      `;
+
+      // Rating
+      html += `
+        <div class="rating-section">
+          <div class="rating-title">Did this help you? ⭐</div>
+          <div class="stars-row" id="starsRow">
+            ${[1,2,3,4,5].map(n => `<button class="star-btn" data-rating="${n}" onclick="rate(${n})">⭐</button>`).join('')}
+          </div>
+          <div class="rating-thanks" id="ratingThanks">Thanks for rating! 🙏 You're awesome!</div>
+        </div>
+      `;
+
+      body.innerHTML = html;
+      showScreen('result-screen');
+
+      // Confetti 🎉
+      launchConfetti();
+    }
+
+
+    // ─────────────────────────────────────────────
+    // SHARE FUNCTIONS
+    // ─────────────────────────────────────────────
+    function buildShareText() {
+      const name    = state.name || 'I';
+      const careers = state.results.map((c, i) => `${i+1}. ${c.emoji} ${c.name}`).join('\n');
+      return `🚀 ${name} used Career Finder AI and found these career options:\n\n${careers}\n\nTension mat le bro, life set ho jayegi! 😄🔥\n\nTry it free 👉 https://careerfinder.ai`;
+    }
+
+    function shareWhatsApp() {
+      const text = encodeURIComponent(buildShareText());
+      window.open(`https://wa.me/?text=${text}`, '_blank');
+      showToast('📲 Opening WhatsApp...');
+    }
+
+    function copyResults() {
+      const text = buildShareText();
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => showToast('✅ Results copied to clipboard!'));
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast('✅ Copied!');
+      }
+    }
+
+
+    // ─────────────────────────────────────────────
+    // RATING
+    // ─────────────────────────────────────────────
+    function rate(n) {
+      document.querySelectorAll('.star-btn').forEach((btn, i) => {
+        btn.classList.toggle('lit', i < n);
+      });
+      setTimeout(() => {
+        document.getElementById('ratingThanks').style.display = 'block';
+        document.getElementById('starsRow').style.display = 'none';
+      }, 400);
+      showToast(n >= 4 ? '🙏 Thank you so much!' : '📝 Thanks for the feedback!');
+    }
+
+
+    // ─────────────────────────────────────────────
+    // DARK MODE TOGGLE
+    // ─────────────────────────────────────────────
+    function toggleDark() {
+      state.isDark = !state.isDark;
+      document.body.classList.toggle('light-mode', !state.isDark);
+      document.getElementById('darkToggleBtn').textContent = state.isDark ? '☀️ Light' : '🌙 Dark';
+    }
+
+
+    // ─────────────────────────────────────────────
+    // TOAST
+    // ─────────────────────────────────────────────
+    let toastTimer;
+    function showToast(msg, duration = 2800) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), duration);
+    }
+
+
+    // ─────────────────────────────────────────────
+    // CONFETTI 🎉
+    // ─────────────────────────────────────────────
+    function launchConfetti() {
+      const container = document.getElementById('confettiContainer');
+      container.innerHTML = '';
+      const colors = ['#7c3aed','#00d4ff','#a855f7','#f59e0b','#22c55e','#ef4444','#06b6d4'];
+      for (let i = 0; i < 60; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.left       = Math.random() * 100 + 'vw';
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.width      = (8 + Math.random() * 8) + 'px';
+        piece.style.height     = (8 + Math.random() * 8) + 'px';
+        piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        piece.style.animationDuration  = (1.5 + Math.random() * 2) + 's';
+        piece.style.animationDelay     = Math.random() * 0.8 + 's';
+        container.appendChild(piece);
+      }
+      setTimeout(() => container.innerHTML = '', 4000);
+    }
+
+
+    // ─────────────────────────────────────────────
+    // LOADING FACTS ROTATOR
+    // ─────────────────────────────────────────────
+    function rotateFact() {
+      const el = document.getElementById('loadingFact');
+      let i = 0;
+      const interval = setInterval(() => {
+        el.style.opacity = 0;
+        setTimeout(() => {
+          i = (i + 1) % loadingFacts.length;
+          el.textContent = loadingFacts[i];
+          el.style.transition = 'opacity 0.5s ease';
+          el.style.opacity = 1;
+        }, 300);
+      }, 2000);
+      // Clear interval after 8s
+      setTimeout(() => clearInterval(interval), 8000);
+    }
+
+
+    // ─────────────────────────────────────────────
+    // OFFLINE DETECTION
+    // ─────────────────────────────────────────────
+    function handleOnlineStatus() {
+      const banner = document.getElementById('homeBanner');
+      if (!navigator.onLine) {
+        banner.classList.add('show');
+        showToast('📴 Offline — basic suggestions available');
+      } else {
+        banner.classList.remove('show');
+      }
+    }
+
+    window.addEventListener('online',  handleOnlineStatus);
+    window.addEventListener('offline', handleOnlineStatus);
+
+
+    // ─────────────────────────────────────────────
+    // PWA INSTALL PROMPT
+    // ─────────────────────────────────────────────
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      document.getElementById('installBanner').classList.add('show');
+    });
+
+    function installApp() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(() => {
+          deferredPrompt = null;
+          document.getElementById('installBanner').classList.remove('show');
+        });
+      }
+    }
+
+    window.addEventListener('appinstalled', () => {
+      showToast('🎉 App installed successfully!');
+      document.getElementById('installBanner').classList.remove('show');
+    });
+
+
+    // ─────────────────────────────────────────────
+    // SERVICE WORKER REGISTRATION
+    // ─────────────────────────────────────────────
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .catch(err => console.warn('SW registration failed:', err));
+      });
+    }
+
+
+    // ─────────────────────────────────────────────
+    // SPLASH → HOME (auto after 1.8s)
+    // ─────────────────────────────────────────────
+    window.addEventListener('load', () => {
+      handleOnlineStatus();
+      setTimeout(() => showScreen('home'), 1800);
+    });
+
+  </script>
+</body>
+</html>
