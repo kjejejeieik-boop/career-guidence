@@ -9,10 +9,14 @@
   "theme_color": "#7c3aed",
   "scope": "./",
   "lang": "en-IN",
-  "categories": ["education", "productivity", "utilities"],
+  "categories": [
+    "education",
+    "productivity",
+    "utilities"
+  ],
   "icons": [
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='80' fill='%237c3aed'/><text y='.9em' font-size='380' x='50%' text-anchor='middle'>🚀</text></svg>",
+      "src": "data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'&gt;&lt;rect width='512' height='512' rx='80' fill='%237c3aed'/&gt;&lt;text y='.9em' font-size='380' x='50%' text-anchor='middle'&gt;🚀&lt;/text&gt;&lt;/svg&gt;",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
@@ -38,14 +42,18 @@
     }
   ],
   "prefer_related_applications": false,
-  "related_applications": [],
   "shortcuts": [
     {
       "name": "Find Career",
       "short_name": "Find",
       "description": "Jump straight to career quiz",
       "url": "./index.html",
-      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }
